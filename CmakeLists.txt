@@ -1,0 +1,56 @@
+cmake_minimum_required(VERSION 3.1)
+
+project(
+    cisker VERSION 0.0.1
+    HOMEPAGE_URL "https://github.com/sekgobela-kevin/cisker"
+    LANGUAGES C
+)
+
+string(CONCAT 
+    PROJECT_DESCRIPTION
+    "Analyses University of Limpopo(UL) "
+    "student numbers with C programming."
+)
+
+
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+set(INCLUDE_FOLDER "${PROJECT_SOURCE_DIR}/include")
+set(TESTS_FOLDER "${PROJECT_SOURCE_DIR}/tests")
+set(SOURCE_FOLDER "${PROJECT_SOURCE_DIR}/src")
+set(EXTERN_FOLDER "${PROJECT_SOURCE_DIR}/extern")
+
+add_subdirectory("${SOURCE_FOLDER}")
+add_subdirectory("${TESTS_FOLDER}")
+add_subdirectory("${EXTERN_FOLDER}/check")
+
+target_include_directories(cisker PUBLIC "${INCLUDE_FOLDER}/cisker")
+
+# OLD policy CMP0076 is causing problems.
+# Tests cant be linked if not created here(current file)
+add_library(tests 
+  "${TESTS_FOLDER}/test_analyse.c"
+  "${TESTS_FOLDER}/test_util.c"
+)
+
+target_include_directories(tests PRIVATE "${TESTS_FOLDER}/include")
+target_include_directories(tests PRIVATE "${SOURCE_FOLDER}/include")
+
+target_link_libraries(tests PRIVATE cisker)
+target_link_libraries(tests PUBLIC check)
+
+
+### helped by: https://stackoverflow.com/questions/63985373
+### find and setup pthread flag(thread.h)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
+find_package(Threads REQUIRED)
+
+### link threads library if exists
+if(TARGET Threads::Threads)
+  target_link_libraries(tests PRIVATE Threads::Threads)
+endif()
+
+
+add_executable(cisker_tests "${TESTS_FOLDER}/main.c")
+target_link_libraries(cisker_tests PUBLIC tests)
