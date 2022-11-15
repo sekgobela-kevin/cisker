@@ -1,0 +1,3 @@
+[submodule "extern/check"]
+	path = extern/check
+	url = https://github.com/libcheck/check.git
