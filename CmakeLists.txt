@@ -28,16 +28,16 @@ target_include_directories(cisker PUBLIC "${INCLUDE_FOLDER}/cisker")
 
 # OLD policy CMP0076 is causing problems.
 # Tests cant be linked if not created here(current file)
-add_library(tests 
+add_library(testlib 
   "${TESTS_FOLDER}/test_analyse.c"
   "${TESTS_FOLDER}/test_util.c"
 )
 
-target_include_directories(tests PRIVATE "${TESTS_FOLDER}/include")
-target_include_directories(tests PRIVATE "${SOURCE_FOLDER}/include")
+target_include_directories(testlib PUBLIC "${TESTS_FOLDER}/include")
+target_include_directories(testlib PRIVATE "${SOURCE_FOLDER}/include")
 
-target_link_libraries(tests PRIVATE cisker)
-target_link_libraries(tests PUBLIC check)
+target_link_libraries(testlib PRIVATE cisker)
+target_link_libraries(testlib PUBLIC check)
 
 
 ### helped by: https://stackoverflow.com/questions/63985373
@@ -48,9 +48,9 @@ find_package(Threads REQUIRED)
 
 ### link threads library if exists
 if(TARGET Threads::Threads)
-  target_link_libraries(tests PRIVATE Threads::Threads)
+  target_link_libraries(testlib PRIVATE Threads::Threads)
 endif()
 
 
-add_executable(cisker_tests "${TESTS_FOLDER}/main.c")
-target_link_libraries(cisker_tests PUBLIC tests)
+add_executable(tests "${TESTS_FOLDER}/main.c")
+target_link_libraries(tests PUBLIC testlib)
