@@ -12,45 +12,47 @@ StudentsInfo getDefaultStudentsInfo(){
     students_info.start_year = START_YEAR;
     students_info.end_year = current_year + 1;
     students_info.min_year = MIN_YEAR;
+    students_info.min_pos = START_POS;
+    students_info.max_pos = END_POS;
     students_info.start_pos = START_POS;
     students_info.end_pos = END_POS;
     free(current_time);
 }
 
-capacity_t calYearCapacity(pos_t start_pos, pos_t end_pos){
+capacity_t calYearCapacity(pos_t min_pos, pos_t max_pos){
     // Calculates year capacity from year start and last position
-    // end_pos = (year_capacity + start_pos) - 1
-    // year_capacity = end_pos - start_pos + 1
-    if(start_pos == end_pos){
+    // max_pos = (year_capacity + min_pos) - 1
+    // year_capacity = max_pos - min_pos + 1
+    if(min_pos == max_pos){
         return 0;
     }
-    return (end_pos - start_pos) + 1;
+    return (max_pos - min_pos) + 1;
 }
 
-pos_t calEndpos(pos_t start_pos, capacity_t year_capacity){
+pos_t calMaxPos(pos_t min_pos, capacity_t year_capacity){
     // Calculates end position for student numbers
     if(year_capacity == 0){
-        return start_pos;
+        return min_pos;
     }
-    return (year_capacity + start_pos) - 1;
+    return (year_capacity + min_pos) - 1;
 }
 
-pos_t calStartPos(pos_t end_pos, capacity_t year_capacity){
+pos_t calStartPos(pos_t max_pos, capacity_t year_capacity){
     // Calculates start position for student numbers
-    // end_pos = (year_capacity + start_pos) - 1
+    // max_pos = (year_capacity + min_pos) - 1
     if(year_capacity==0){
-        return end_pos;
+        return max_pos;
     }
-    return (end_pos - year_capacity) + 1;
+    return (max_pos - year_capacity) + 1;
 }
 
-size_t posPartSize(pos_t start_pos, capacity_t year_capacity){
+size_t posPartSize(pos_t min_pos, capacity_t year_capacity){
     // Calculates size(digits) position part of student number.
-    pos_t end_pos = calEndpos(start_pos, year_capacity);
-    if(end_pos==0){
+    pos_t max_pos = calMaxPos(min_pos, year_capacity);
+    if(max_pos==0){
         return 1;
     }
-    return intSize(end_pos);
+    return intSize(max_pos);
 }
 
 size_t yearPartSize(year_t year, unsigned int strict){

@@ -16,10 +16,10 @@ END_TEST
 
 START_TEST(testCalEndpos)
 {
-    ck_assert_int_eq(calEndpos(0,0), 0);
-    ck_assert_int_eq(calEndpos(5,0), 5);
-    ck_assert_int_eq(calEndpos(0,10), 9);
-    ck_assert_int_eq(calEndpos(1,9), 9);
+    ck_assert_int_eq(calMaxPos(0,0), 0);
+    ck_assert_int_eq(calMaxPos(5,0), 5);
+    ck_assert_int_eq(calMaxPos(0,10), 9);
+    ck_assert_int_eq(calMaxPos(1,9), 9);
 }
 END_TEST
 

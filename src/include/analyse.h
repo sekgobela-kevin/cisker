@@ -31,6 +31,8 @@ struct StudentsInfo{
     year_t end_year;
     year_t min_year;
     year_t year_capacity;
+    pos_t min_pos;
+    pos_t max_pos;
     pos_t start_pos;
     pos_t end_pos;
     unsigned int strict;
@@ -48,12 +50,12 @@ StudentsInfo getDefaultStudentsInfo();
  */
 year_t getEndYear(void);
 
-capacity_t calYearCapacity(pos_t start_pos, pos_t end_pos);
+capacity_t calYearCapacity(pos_t min_pos, pos_t max_pos);
 
-pos_t calEndpos(pos_t start_pos, capacity_t year_capacity);
+pos_t calMaxPos(pos_t min_pos, capacity_t year_capacity);
 
-pos_t calStartPos(pos_t end_pos, capacity_t year_capacity);
+pos_t calStartPos(pos_t max_pos, capacity_t year_capacity);
 
-size_t posPartSize(pos_t start_pos, capacity_t year_capacity);
+size_t posPartSize(pos_t min_pos, capacity_t year_capacity);
 
 size_t yearPartSize(year_t year, unsigned int strict);
