@@ -9,7 +9,7 @@
 int main(void)
  {
    Suite *suite_utils = create_utils_suite();
-   Suite *suite_analyse = create_utils_suite();
+   Suite *suite_analyse = create_analyse_suite();
    SRunner *suite_runner = srunner_create(suite_utils);
 
    srunner_add_suite(suite_runner, suite_analyse);

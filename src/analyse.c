@@ -28,16 +28,28 @@ capacity_t calYearCapacity(pos_t start_pos, pos_t end_pos){
 }
 
 pos_t calEndpos(pos_t start_pos, capacity_t year_capacity){
-    // Calculates last position for student numbers
+    // Calculates end position for student numbers
     if(year_capacity == 0){
         return start_pos;
     }
     return (year_capacity + start_pos) - 1;
 }
 
+pos_t calStartPos(pos_t end_pos, capacity_t year_capacity){
+    // Calculates start position for student numbers
+    // end_pos = (year_capacity + start_pos) - 1
+    if(year_capacity==0){
+        return end_pos;
+    }
+    return (end_pos - year_capacity) + 1;
+}
+
 size_t posPartSize(pos_t start_pos, capacity_t year_capacity){
     // Calculates size(digits) position part of student number.
     pos_t end_pos = calEndpos(start_pos, year_capacity);
+    if(end_pos==0){
+        return 1;
+    }
     return intSize(end_pos);
 }
 
