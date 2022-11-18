@@ -3,19 +3,20 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <limits.h>
 
 
-StudentsInfo getDefaultStudentsInfo(){
-    StudentsInfo students_info;
+SNumsInfo createSNumsInfo(){
+    SNumsInfo students_info;
     struct tm *current_time = presentTime();
     year_t current_year = current_time->tm_year;
+    students_info.min_year = MIN_YEAR;
     students_info.start_year = START_YEAR;
     students_info.end_year = current_year + 1;
-    students_info.min_year = MIN_YEAR;
-    students_info.min_pos = START_POS;
-    students_info.max_pos = END_POS;
-    students_info.start_pos = START_POS;
-    students_info.end_pos = END_POS;
+    students_info.min_pos = MIN_POS;
+    students_info.max_pos = MAX_POS;
+    students_info.start_pos = -1;
+    students_info.end_pos = -1;
     free(current_time);
 }
 
