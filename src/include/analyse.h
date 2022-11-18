@@ -49,6 +49,7 @@ struct StudentNumsInfo{
 struct StudentNumber{
     part_t year_part;
     part_t pos_part;
+    snum_t student_number;
 };
 
 typedef struct StudentNumsInfo SNumsInfo;
@@ -66,6 +67,8 @@ size_t posPartSize(pos_t min_pos, capacity_t year_capacity);
 
 size_t yearPartSize(year_t year, unsigned int strict);
 
+
+bool partValid(part_t part);
 
 bool yearValid(year_t year, SNumsInfo students_info);
 
