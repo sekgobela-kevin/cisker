@@ -6,7 +6,7 @@
 #include <check.h>
 
 
-START_TEST(test_present_time)
+START_TEST(test_time_functions)
 {
     time_t seconds_time;
     struct tm *time_object;
@@ -16,6 +16,7 @@ START_TEST(test_present_time)
 
     ck_assert_int_eq(cisker_time->tm_mon, local_time->tm_mon);
     ck_assert_int_eq(cisker_time->tm_year, local_time->tm_year);
+    ck_assert_int_eq(presentYear(), local_time->tm_year+1900);
     free(local_time);
     free(cisker_time);
 }
@@ -111,7 +112,7 @@ Suite * create_utils_suite(void)
     test_suite = suite_create("utilities");
     test_case = tcase_create("utilities");
 
-    tcase_add_test(test_case, test_present_time);
+    tcase_add_test(test_case, test_time_functions);
     tcase_add_test(test_case, test_int_size);
     tcase_add_test(test_case, test_int_str);
     tcase_add_test(test_case, test_str_int);
