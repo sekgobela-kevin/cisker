@@ -6,7 +6,7 @@
 #define MIN_YEAR 1000
 
 // Year UL started to operate
-#define START_YEAR 1959;
+#define START_YEAR 1959
 // End year is based on current year plus 1
 //#define END_YEAR = presentTime()->year + 1;
 
@@ -14,7 +14,7 @@
 // 'Year 2000 bug' or 'Year 2000 problem'
 // The year caused year parts of student numbers to change.
 #define Y2K_YEAR 2000
-#define BEFORE_Y2K_YEAR Y2K_YEAR - 1;
+#define BEFORE_Y2K_YEAR Y2K_YEAR - 1
 
 // First position likely 0
 #define MIN_POS 0
@@ -25,6 +25,9 @@
 
 #define START_POS MIN_POS
 #define END_POS MAX_POS
+
+// Forces student numbers to be (UL Complient)
+#define STRICT true
 
 
 typedef unsigned int year_t;
@@ -37,10 +40,10 @@ typedef unsigned int snum_t;
 struct StudentNumsInfo{
     year_t start_year;
     year_t end_year;
-    year_t min_year;
+    //year_t min_year;
     year_t year_capacity;
     pos_t min_pos;
-    pos_t max_pos;
+    //pos_t max_pos;
     int start_pos;
     int end_pos;
     bool strict;

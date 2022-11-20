@@ -9,16 +9,16 @@
 
 SNumsInfo createSNumsInfo(){
     SNumsInfo students_info;
-    struct tm *current_time = presentTime();
-    year_t current_year = current_time->tm_year;
-    students_info.min_year = MIN_YEAR;
+    //students_info.min_year = MIN_YEAR;
     students_info.start_year = START_YEAR;
-    students_info.end_year = current_year + 1;
+    students_info.end_year = presentYear() + 1;
     students_info.min_pos = MIN_POS;
-    students_info.max_pos = MAX_POS;
+    //students_info.max_pos = MAX_POS;
+    students_info.year_capacity = YEAR_CAPACITY;
     students_info.start_pos = -1;
     students_info.end_pos = -1;
-    free(current_time);
+    students_info.strict = STRICT;
+    return students_info;
 }
 
 capacity_t calYearCapacity(pos_t min_pos, pos_t max_pos){
@@ -69,7 +69,7 @@ size_t yearPartSize(year_t year, unsigned int strict){
 
 bool yearValid(year_t year, SNumsInfo students_info){
     // Checks if year is valid for student numbers
-    return year>=students_info.end_year && year<=students_info.end_year;
+    return year>=students_info.start_year && year<=students_info.end_year;
 }
 
 bool partValid(part_t part){
@@ -83,14 +83,20 @@ bool partValid(part_t part){
     // free(buf);
     // return valid;
     return strspn(part, "0123456789") == strlen(part);
-
 }
+
 bool yearPartValid(part_t year_part, SNumsInfo students_info){
     // Checks if year part is valid for student numbers
     if(partValid(year_part)){
         year_t year = strInt(year_part);
-        if(students_info.strict && isTwentiethCentury(year)){
-            if(!(year>=10 && year<100)){
+        if(students_info.strict){
+            if(strlen(year_part)==2){
+                part_t full_year = malloc(strlen(year_part)+3);
+                strcpy(full_year, "19");
+                strcat(full_year, year_part);
+                year = strInt(full_year);
+                free(full_year);
+            }else if(isTwentiethCentury(year)){
                 return false;
             }
         }

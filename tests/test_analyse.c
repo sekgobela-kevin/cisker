@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <time.h>
+#include <stdlib.h>
 
 #include <analyse.h>
+#include <util.h>
 #include <check.h>
 
 
@@ -51,6 +55,104 @@ START_TEST(testYearPartSize)
 END_TEST
 
 
+
+START_TEST(testPartValid)
+{
+    ck_assert(partValid("2034"));
+    ck_assert(!partValid("20B34"));
+    ck_assert(partValid("0000000"));
+    ck_assert(partValid("99999999"));
+}
+END_TEST
+
+START_TEST(testCreateSNumsInfo)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(students_info.start_year, START_YEAR);
+    ck_assert_int_eq(students_info.end_year, presentYear()+1);
+    ck_assert_int_eq(students_info.min_pos, MIN_POS);
+    ck_assert_int_eq(students_info.start_pos, -1);
+    ck_assert_int_eq(students_info.end_pos, -1);
+    ck_assert_int_eq(students_info.year_capacity, YEAR_CAPACITY);
+    ck_assert_int_eq(students_info.strict, STRICT);
+}
+END_TEST
+
+START_TEST(testYearValid)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert(!yearValid(400, students_info));
+    //ck_assert(yearValid(1960, students_info));
+    ck_assert(yearValid(presentYear()+1, students_info));
+    ck_assert(!yearValid(presentYear()+2, students_info));
+
+    students_info.start_year = 0;
+    ck_assert(yearValid(400, students_info));
+    students_info.start_year = 1000;
+    ck_assert(!yearValid(400, students_info));
+    ck_assert(yearValid(1000, students_info));
+    students_info.end_year = 30090;
+    ck_assert(yearValid(30090, students_info));
+    ck_assert(!yearValid(30091, students_info));
+}
+END_TEST
+
+START_TEST(testPosValid)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    //ck_assert(posValid(0, students_info));
+    ck_assert(posValid(99999, students_info));
+    ck_assert(!posValid(100000, students_info));
+
+    students_info.min_pos = 10;
+    ck_assert(!posValid(4, students_info));
+    ck_assert(posValid(99999+10, students_info));
+    ck_assert(!posValid(99999+11, students_info));
+
+    students_info.start_pos = 500;
+    ck_assert(!posValid(200, students_info));
+    ck_assert(posValid(99999+10, students_info));
+    
+    students_info = createSNumsInfo();
+    students_info.year_capacity = 500;
+    ck_assert(posValid(200, students_info));
+    ck_assert(!posValid(500, students_info));
+}
+END_TEST
+
+START_TEST(testYearPartValid)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert(!yearPartValid("400", students_info));
+    ck_assert(yearPartValid("84", students_info));
+    ck_assert(!yearPartValid("1984", students_info));
+    ck_assert(yearPartValid("2015", students_info));
+    ck_assert(!yearPartValid("num1", students_info));
+
+    students_info.strict = false;
+    ck_assert(!yearPartValid("84", students_info));
+    ck_assert(yearPartValid("2015", students_info));
+}
+END_TEST
+
+START_TEST(testPosPartValid)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert(!posPartValid("0", students_info));
+    ck_assert(posPartValid("00000", students_info));
+    ck_assert(posPartValid("99999", students_info));
+    ck_assert(!posPartValid("9999", students_info));
+    ck_assert(!posPartValid("100000", students_info));
+
+    students_info.year_capacity = 5000;
+    students_info.start_pos = 500;
+    ck_assert(!posPartValid("0400", students_info));
+    ck_assert(posPartValid("0600", students_info));
+    ck_assert(!posPartValid("5000", students_info));
+}
+END_TEST
+
+
 Suite * create_analyse_suite(void){
     Suite *test_suite;
     TCase *test_case;
@@ -63,6 +165,14 @@ Suite * create_analyse_suite(void){
     tcase_add_test(test_case, testPosPartSize);
     tcase_add_test(test_case, testYearPartSize);
     tcase_add_test(test_case, testCalStartPos);
+
+    tcase_add_test(test_case, testCreateSNumsInfo);
+    tcase_add_test(test_case, testPartValid);
+    tcase_add_test(test_case, testYearValid);
+    tcase_add_test(test_case, testPosValid);
+    tcase_add_test(test_case, testYearPartValid);
+    tcase_add_test(test_case, testPosPartValid);
+    
     suite_add_tcase(test_suite, test_case);
     return test_suite;
 }
