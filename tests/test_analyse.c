@@ -153,6 +153,94 @@ START_TEST(testPosPartValid)
 END_TEST
 
 
+START_TEST(testExtractYearPart)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_str_eq(extractYearPart(201500371, students_info), "2015");
+    ck_assert_str_eq(extractYearPart(8400371, students_info), "84");
+    ck_assert_str_eq(extractYearPart(00371, students_info), "");
+    ck_assert_str_eq(extractYearPart(23, students_info), "");
+
+    students_info.year_capacity = 1000000;
+    ck_assert_str_eq(extractYearPart(201500371, students_info), "201"); 
+}
+END_TEST
+
+START_TEST(testExtractPosPart)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_str_eq(extractPosPart(201500371, students_info), "00371");
+    ck_assert_str_eq(extractPosPart(8400371, students_info), "00371");
+    ck_assert_str_eq(extractPosPart(53371, students_info), "");
+    ck_assert_str_eq(extractPosPart(23, students_info), "");
+    
+    students_info.year_capacity = 1000000;
+    ck_assert_str_eq(extractPosPart(201500371, students_info), "500371");
+}
+END_TEST
+
+START_TEST(testExtractYear)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(extractYear(201500371, students_info), 2015);
+    ck_assert_int_eq(extractYear(8400371, students_info), 1984);
+    //ck_assert_int_eq(extractYear(53371, students_info), "");
+    //ck_assert_int_eq(extractYear(23, students_info), "");
+
+    students_info.year_capacity = 1000000;
+    ck_assert_int_eq(extractYear(201500371, students_info), 201);
+}
+END_TEST
+
+START_TEST(testExtractPos)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(extractPos(201500371, students_info),371);
+    ck_assert_int_eq(extractPos(8400371, students_info), 371);
+    //ck_assert_int_eq(extractPos(00371, students_info), "");
+    //ck_assert_int_eq(extractPos(23, students_info), "");
+    
+    students_info.year_capacity = 1000000;
+    ck_assert_int_eq(extractPos(201500371, students_info), 500371);
+}
+END_TEST
+
+
+START_TEST(testSplitStudentNumber)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    SNum split_snum = splitStudentNumber(201500371, students_info);
+    ck_assert_str_eq(split_snum.year_part, "2015");
+    ck_assert_str_eq(split_snum.pos_part, "00371");
+}
+END_TEST
+
+START_TEST(testStudentNumberValid)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert(studentNumberValid(201500371, students_info));
+    ck_assert(!studentNumberValid(198400371, students_info));;
+    ck_assert(studentNumberValid(8400371, students_info));
+    ck_assert(!studentNumberValid(4400371, students_info));
+
+    students_info.end_year = 2014;
+    ck_assert(!studentNumberValid(201500371, students_info));
+    students_info.start_year = 1900;
+    ck_assert(studentNumberValid(4400371, students_info));
+
+
+    students_info.year_capacity = 10000;
+    ck_assert(!studentNumberValid(4400371, students_info));
+    ck_assert(studentNumberValid(440371, students_info));
+
+    students_info.strict = false;
+    ck_assert(!studentNumberValid(440371, students_info));
+    ck_assert(studentNumberValid(19440371, students_info));
+}
+END_TEST
+
+
+
 Suite * create_analyse_suite(void){
     Suite *test_suite;
     TCase *test_case;
@@ -172,9 +260,15 @@ Suite * create_analyse_suite(void){
     tcase_add_test(test_case, testPosValid);
     tcase_add_test(test_case, testYearPartValid);
     tcase_add_test(test_case, testPosPartValid);
+
+    tcase_add_test(test_case, testExtractPosPart);
+    tcase_add_test(test_case, testExtractYearPart);
+    tcase_add_test(test_case, testExtractPos);
+    tcase_add_test(test_case, testExtractYear);
+
+    tcase_add_test(test_case, testSplitStudentNumber);
+    tcase_add_test(test_case, testStudentNumberValid);
     
     suite_add_tcase(test_suite, test_case);
     return test_suite;
 }
-
-

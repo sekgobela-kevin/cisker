@@ -133,6 +133,74 @@ bool posPartValid(part_t pos_part, SNumsInfo students_info){
     return false;
 }
 
-bool studentNumberValid(part_t stnum, SNumsInfo students_info){
+part_t extractYearPart(snum_t student_number, SNumsInfo students_info){
+    part_t snum_part = intStr(student_number);
+    size_t pos_size = posPartSize(students_info.min_pos,
+                                  students_info.year_capacity);
+    size_t snum_size = strlen(snum_part);
+    int end_index = 0;
+    if(snum_size>pos_size){
+        end_index = snum_size-pos_size;
+    }
+    // else student number is not valid a sits missing year part
+    part_t year_part = sliceStr(snum_part, 0, end_index);
+    free(snum_part);
+    return year_part;
+}
 
+part_t extractPosPart(snum_t student_number, SNumsInfo students_info){
+    part_t snum_part = intStr(student_number);
+    size_t pos_size = posPartSize(students_info.min_pos,
+                                students_info.year_capacity);
+    size_t snum_size = strlen(snum_part);
+    int start_index = snum_size+1;
+    int end_index = start_index;
+    if(snum_size>pos_size){
+        start_index = snum_size - pos_size;
+    }
+    // else student number is not valid a sits missing year part
+    part_t pos_part = sliceStr(snum_part, start_index, end_index);
+    free(snum_part);
+    return pos_part;
+}
+
+year_t extractYear(snum_t student_number, SNumsInfo students_info){
+    part_t year_part = extractYearPart(student_number, students_info);
+    year_t year = strInt(year_part);
+    if(students_info.strict && strlen(year_part)==2){
+        year += 1900;
+    }
+    free(year_part);
+    return year;
+}
+
+pos_t extractPos(snum_t student_number, SNumsInfo students_info){
+    part_t pos_part = extractPosPart(student_number, students_info);
+    year_t pos = strInt(pos_part);
+    free(pos_part);
+    return pos;
+}
+
+SNum splitStudentNumber(snum_t student_number, SNumsInfo students_info){
+    SNum split_snum;
+    split_snum.student_number = student_number;
+    split_snum.year_part = extractYearPart(student_number, students_info);
+    split_snum.pos_part = extractPosPart(student_number, students_info);
+    return split_snum;
+}
+
+
+bool studentNumberValid(snum_t student_number, SNumsInfo students_info){
+    part_t pos_part = extractPosPart(student_number, students_info);
+    part_t year_part = extractYearPart(student_number, students_info);
+    bool is_valid;
+    if(pos_part && year_part){
+        is_valid = yearPartValid(year_part, students_info) &&
+                   posPartValid(pos_part, students_info);
+    }else{
+        is_valid = false;
+    }
+    free(year_part);
+    free(pos_part);
+    return is_valid;
 }

@@ -81,8 +81,6 @@ bool posValid(year_t pos, SNumsInfo students_info);
 
 bool posPartValid(part_t pos_part, SNumsInfo students_info);
 
-bool studentNumberValid(part_t stnum, SNumsInfo students_info);
-
 
 pos_t toPos(part_t pos_part, SNumsInfo students_info);
 
@@ -103,3 +101,5 @@ pos_t extractPos(snum_t student_number, SNumsInfo students_info);
 
 
 SNum splitStudentNumber(snum_t student_number, SNumsInfo students_info);
+
+bool studentNumberValid(snum_t studnet_number, SNumsInfo students_info);
