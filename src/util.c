@@ -24,7 +24,7 @@ size_t intSize(int num){
     return floor(log10(abs(num))) + 1;
 }
 
-char* intStr(int num){
+char *intStr(int num){
     char *str = malloc(intSize(num)+1);
     sprintf(str, "%d", num);
     return str;
@@ -34,26 +34,33 @@ int strInt(char *str){
     return atoi(str);
 }
 
-void slice(const void *src, void *dest, int start, int end){
-    memcpy(dest, src + start, end - start);
+int *sliceIntArr(const int *arr, int start, int end){
+    int size = end-start;
+    int *sub_arr = malloc(sizeof(int)*size);
+    for (size_t i = start; i < end; i++)
+    {
+        sub_arr[i-start] = arr[i];
+    }
+    return sub_arr;
 }
 
-char* sliceStr(const char *str, int start, int end){
-    int size = end-start+1;
-    char *dest = malloc(size);
-    strcpy(dest, "");
-    slice(str, dest, start, end);
+char *sliceStr(const char *str, int start, int end){
+    int size = end-start;
+    char *sub_str = malloc((sizeof(char)*size)+1);
+    strncpy(sub_str, str+start, size);
     // Without null termination, it wont be seen string.
-    // Dont know if memcpy() does add null to destination.
-    //*(dest+size) = '\0';
-    return dest;
+    // Dont know if strncpy() does add null to destination.
+    *(sub_str+size) = 0;
+    return sub_str;
 }
 
 bool equalIntArrays(const int *arr, int *sarr, size_t size){
     for (size_t i = 0; i < size; i++){
-        if (*(arr+i) != *(sarr+i)) return 0;
+        if (*(arr+i) != *(sarr+i)){
+            return false;
+        }
     }
-    return 1;
+    return true;
 }
 
 unsigned int getCentury(unsigned int year){

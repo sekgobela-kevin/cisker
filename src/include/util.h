@@ -8,13 +8,13 @@ unsigned int presentYear();
 
 size_t intSize(int num);
 
-char* intStr(int num);
+char *intStr(int num);
 
-int strInt(char* str);
+int strInt(char *str);
 
-void slice(const void *src, void *dest, int start, int end);
+int *sliceIntArr(const int *arr, int start, int end);
 
-char* sliceStr(const char *str, int start, int end);
+char *sliceStr(const char *str, int start, int end);
 
 bool equalIntArrays(const int *arr, int *sarr, size_t size);
 

@@ -48,18 +48,16 @@ START_TEST(test_str_int)
 }
 END_TEST
 
-START_TEST(test_slice)
+START_TEST(test_slice_int_array)
 {
-    char dest_str[3];
-    int dest_arr[2];
+    int *dest_arr;
     int src_arr[6] = {1,2,3,4,5,6};
     int result_arr[2] = {4,5};
-    slice(src_arr, dest_arr, 3, 5);
-    slice("name", dest_str, 1, 3);
-    ck_assert_str_eq(dest_str, "am");
+    dest_arr = sliceIntArr(src_arr, 3, 5);
     // Failing as elements not copied to result_arr.
     // result_arr contains random numbers(unused space)
-    //ck_assert(equalIntArrays(dest_arr, result_arr, 2));
+    ck_assert(equalIntArrays(dest_arr, result_arr, 2));
+    free(result_arr);
 }
 END_TEST
 
@@ -116,7 +114,7 @@ Suite * create_utils_suite(void)
     tcase_add_test(test_case, test_int_size);
     tcase_add_test(test_case, test_int_str);
     tcase_add_test(test_case, test_str_int);
-    tcase_add_test(test_case, test_slice);
+    tcase_add_test(test_case, test_slice_int_array);
     tcase_add_test(test_case, test_slice_str);
     tcase_add_test(test_case, test_equal_int_arrays);
     tcase_add_test(test_case, test_get_century);
