@@ -100,6 +100,24 @@ START_TEST(test_is_twentieth_century)
 }
 END_TEST
 
+START_TEST(test_random_int)
+{
+    int random_num = randomInt(100, 200);
+    ck_assert_int_ge(random_num, 100);
+    ck_assert_int_lt(random_num, 200);
+    int another_random_num = randomInt(300, 600000);
+    ck_assert_int_ge(another_random_num, 300);
+    ck_assert_int_lt(another_random_num, 600000);
+}
+END_TEST
+
+START_TEST(test_concat_str)
+{
+    ck_assert_str_eq(concatStr("name", "space"), "namespace");
+    ck_assert_str_eq(concatStr("", ""), "");
+    ck_assert_str_eq(concatStr("aaa", "b"), "aaab");
+}
+END_TEST
 
 
 Suite * create_utils_suite(void)
@@ -119,6 +137,8 @@ Suite * create_utils_suite(void)
     tcase_add_test(test_case, test_equal_int_arrays);
     tcase_add_test(test_case, test_get_century);
     tcase_add_test(test_case, test_is_twentieth_century);
+    tcase_add_test(test_case, test_random_int);
+    tcase_add_test(test_case, test_concat_str);
     suite_add_tcase(test_suite, test_case);
     return test_suite;
 }

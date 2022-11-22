@@ -21,3 +21,7 @@ bool equalIntArrays(const int *arr, int *sarr, size_t size);
 unsigned int getCentury(unsigned int year);
 
 bool isTwentiethCentury(unsigned int year);
+
+int randomInt(int start, int end);
+
+char *concatStr(const char *first, const char *second);

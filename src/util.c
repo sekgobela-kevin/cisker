@@ -76,3 +76,16 @@ unsigned int getCentury(unsigned int year){
 bool isTwentiethCentury(unsigned int year){
     return year>=1900 && year<=1999;
 }
+
+int randomInt(int start, int end){
+    float ratio = rand()/RAND_MAX;
+    return start + (int)((end-start)*ratio);
+}
+
+char *concatStr(const char *first, const char *second){
+    int size = strlen(first)+strlen(second);
+    char *res_str = malloc(sizeof(char)*(size+1));
+    strcat(res_str, first);
+    strcat(res_str, second);
+    return res_str;
+}
