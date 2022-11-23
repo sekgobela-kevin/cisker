@@ -67,6 +67,44 @@ size_t yearPartSize(year_t year, unsigned int strict){
 }
 
 
+pos_t toPos(part_t pos_part, SNumsInfo students_info){
+    return strInt(pos_part);
+}
+
+year_t toYear(part_t year_part, SNumsInfo students_info){
+    year_t year = strInt(year_part);
+    if(students_info.strict && strlen(year_part)==2){
+        //year_t start_year = students_info.start_year;
+        //year_t end_year = students_info.start_year;
+        //if(isTwentiethCentury(start_year)||isTwentiethCentury(end_year)){
+        year += 1900;
+    }
+    return year;
+}
+
+part_t toPosPart(pos_t pos, SNumsInfo students_info){
+    char *pos_str = intStr(pos);
+    int pos_part_size = posPartSize(students_info.min_pos,
+                                    students_info.year_capacity);
+    part_t pos_part = fillStr(pos_str, '0', pos_part_size);
+    free(pos_str);
+    return pos_part;
+}
+
+part_t toYearPart(year_t year, SNumsInfo students_info){
+    part_t year_part;
+    char * year_str = intStr(year);
+    size_t year_size = strlen(year_part);
+    if(students_info.strict && isTwentiethCentury(year)){
+        year_part = sliceStr(year_str, year_size - 2, year_size);
+        free(year_str);
+    }else{
+        year_part = year_str;
+    }
+    return year_part;
+}
+
+
 bool yearValid(year_t year, SNumsInfo students_info){
     // Checks if year is valid for student numbers
     return year>=students_info.start_year && year<=students_info.end_year;
@@ -88,21 +126,16 @@ bool partValid(part_t part){
 bool yearPartValid(part_t year_part, SNumsInfo students_info){
     // Checks if year part is valid for student numbers
     if(partValid(year_part)){
-        year_t year = strInt(year_part);
-        if(students_info.strict){
-            if(strlen(year_part)==2){
-                part_t full_year = malloc(strlen(year_part)+3);
-                strcpy(full_year, "19");
-                strcat(full_year, year_part);
-                year = strInt(full_year);
-                free(full_year);
-            }else if(isTwentiethCentury(year)){
+        year_t year = toYear(year_part, students_info);
+        if(students_info.strict&&isTwentiethCentury(year)){
+            if(strlen(year_part)!=2){
                 return false;
             }
         }
         return yearValid(year, students_info);
+    }else{
+        return false;
     }
-    return false;
 }
 
 bool posValid(pos_t pos, SNumsInfo students_info){
@@ -124,13 +157,14 @@ bool posValid(pos_t pos, SNumsInfo students_info){
 
 bool posPartValid(part_t pos_part, SNumsInfo students_info){
     // Checks if position part is valid for student numbers
-    size_t pos_part_size = posPartSize(students_info.min_pos,
+    size_t pos_size = posPartSize(students_info.min_pos,
                                   students_info.year_capacity);
-    if(strlen(pos_part)==pos_part_size){
-        pos_t pos = strInt(pos_part);
+    if(strlen(pos_part)==pos_size){
+        pos_t pos = toPos(pos_part, students_info);
         return posValid(pos, students_info);
+    }else{
+        return false;
     }
-    return false;
 }
 
 part_t extractYearPart(snum_t student_number, SNumsInfo students_info){
@@ -153,7 +187,7 @@ part_t extractPosPart(snum_t student_number, SNumsInfo students_info){
     size_t pos_size = posPartSize(students_info.min_pos,
                                 students_info.year_capacity);
     size_t snum_size = strlen(snum_part);
-    int start_index = snum_size+1;
+    int start_index = snum_size;
     int end_index = start_index;
     if(snum_size>pos_size){
         start_index = snum_size - pos_size;
@@ -166,17 +200,14 @@ part_t extractPosPart(snum_t student_number, SNumsInfo students_info){
 
 year_t extractYear(snum_t student_number, SNumsInfo students_info){
     part_t year_part = extractYearPart(student_number, students_info);
-    year_t year = strInt(year_part);
-    if(students_info.strict && strlen(year_part)==2){
-        year += 1900;
-    }
+    year_t year = toYear(year_part, students_info);
     free(year_part);
     return year;
 }
 
 pos_t extractPos(snum_t student_number, SNumsInfo students_info){
     part_t pos_part = extractPosPart(student_number, students_info);
-    year_t pos = strInt(pos_part);
+    year_t pos = toPos(pos_part, students_info);
     free(pos_part);
     return pos;
 }

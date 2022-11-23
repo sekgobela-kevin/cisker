@@ -78,6 +78,43 @@ START_TEST(testCreateSNumsInfo)
 }
 END_TEST
 
+START_TEST(testToPos)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(toPos("00400", students_info), 400);
+}
+END_TEST
+
+START_TEST(testToYear)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(toYear("2015", students_info), 2015);
+    ck_assert_int_eq(toYear("84", students_info), 1984);
+    students_info.strict = false;
+    ck_assert_int_eq(toYear("84", students_info), 84);
+    ck_assert_int_eq(toYear("1984", students_info), 1984);
+}
+END_TEST
+
+START_TEST(testToPosPart)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_str_eq(toPosPart(400, students_info), "00400");
+    students_info.year_capacity = 1000;
+    ck_assert_str_eq(toPosPart(400, students_info), "400");
+}
+END_TEST
+
+START_TEST(testToYearPart)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_str_eq(toYearPart(2015, students_info), "2015");
+    ck_assert_str_eq(toYearPart(1984, students_info), "84");
+    students_info.strict = false;
+    ck_assert_str_eq(toYearPart(84, students_info), "84");
+}
+END_TEST
+
 START_TEST(testYearValid)
 {
     SNumsInfo students_info = createSNumsInfo();
@@ -255,19 +292,24 @@ Suite * create_analyse_suite(void){
     tcase_add_test(test_case, testCalStartPos);
 
     tcase_add_test(test_case, testCreateSNumsInfo);
-    tcase_add_test(test_case, testPartValid);
-    tcase_add_test(test_case, testYearValid);
-    tcase_add_test(test_case, testPosValid);
-    tcase_add_test(test_case, testYearPartValid);
-    tcase_add_test(test_case, testPosPartValid);
+    tcase_add_test(test_case, testToPos);
+    tcase_add_test(test_case, testToYear);
+    tcase_add_test(test_case, testToPosPart);
+    tcase_add_test(test_case, testToYearPart);
 
-    tcase_add_test(test_case, testExtractPosPart);
-    tcase_add_test(test_case, testExtractYearPart);
-    tcase_add_test(test_case, testExtractPos);
-    tcase_add_test(test_case, testExtractYear);
+    // tcase_add_test(test_case, testPartValid);
+    // tcase_add_test(test_case, testYearValid);
+    // tcase_add_test(test_case, testPosValid);
+    // tcase_add_test(test_case, testYearPartValid);
+    // tcase_add_test(test_case, testPosPartValid);
 
-    tcase_add_test(test_case, testSplitStudentNumber);
-    tcase_add_test(test_case, testStudentNumberValid);
+    //tcase_add_test(test_case, testExtractPosPart);
+    //tcase_add_test(test_case, testExtractYearPart);
+    //tcase_add_test(test_case, testExtractPos);
+    //tcase_add_test(test_case, testExtractYear);
+
+    // tcase_add_test(test_case, testSplitStudentNumber);
+    // tcase_add_test(test_case, testStudentNumberValid);
     
     suite_add_tcase(test_suite, test_case);
     return test_suite;
