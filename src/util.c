@@ -84,8 +84,29 @@ int randomInt(int start, int end){
 
 char *concatStr(const char *first, const char *second){
     int size = strlen(first)+strlen(second);
-    char *res_str = malloc(sizeof(char)*(size+1));
-    strcat(res_str, first);
+    char *res_str = malloc(sizeof(char)*(size+10));
+    strcpy(res_str, first);
     strcat(res_str, second);
+    res_str[size] = '\0'; 
     return res_str;
+}
+
+char *fillStr(const char *str, char fill, size_t size){
+    size_t fill_size;
+    char *fill_str;
+    char *filled_str;
+    if(size>strlen(str)){
+        fill_size = size - strlen(str);
+    }else{
+        fill_size = 0;
+    }
+    fill_str = malloc(sizeof(char)*(fill_size+1));
+    for (size_t i = 0; i < fill_size; i++)
+    {
+        fill_str[i] = fill;
+    }
+    fill_str[fill_size] = '\0'; 
+    filled_str = concatStr(fill_str, str);
+    free(fill_str);
+    return filled_str;
 }

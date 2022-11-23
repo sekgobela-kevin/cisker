@@ -25,3 +25,6 @@ bool isTwentiethCentury(unsigned int year);
 int randomInt(int start, int end);
 
 char *concatStr(const char *first, const char *second);
+
+char *fillStr(const char *str, char fill, size_t size);
+

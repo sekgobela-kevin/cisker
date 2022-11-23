@@ -119,6 +119,15 @@ START_TEST(test_concat_str)
 }
 END_TEST
 
+START_TEST(test_fill_str)
+{
+    ck_assert_str_eq(fillStr("name", '-', 0), "name");
+    ck_assert_str_eq(fillStr("name", '-', 4), "name");
+    ck_assert_str_eq(fillStr("name", '-', 6), "--name");
+    ck_assert_str_eq(fillStr("name", '-', 10), "------name");
+}
+END_TEST
+
 
 Suite * create_utils_suite(void)
 {
@@ -139,6 +148,7 @@ Suite * create_utils_suite(void)
     tcase_add_test(test_case, test_is_twentieth_century);
     tcase_add_test(test_case, test_random_int);
     tcase_add_test(test_case, test_concat_str);
+    tcase_add_test(test_case, test_fill_str);
     suite_add_tcase(test_suite, test_case);
     return test_suite;
 }
