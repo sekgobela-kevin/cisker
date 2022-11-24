@@ -8,15 +8,15 @@
 
 
 struct tm *presentTime(){
-    time_t seconds_time;
-    time(&seconds_time);
+    time_t seconds_time = time(NULL);
     return localtime(&seconds_time);
 }
 
 unsigned int presentYear(){
     struct tm *current_time = presentTime();
     unsigned int year = current_time->tm_year + 1900;
-    free(current_time);
+    // Never free struct tm pointer(static variable).
+    //free(current_time);
     return year;
 }
 
