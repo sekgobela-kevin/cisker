@@ -21,11 +21,15 @@ unsigned int presentYear(){
 }
 
 size_t intSize(int num){
+    if(num==0){
+        return 1;
+    }
     return floor(log10(abs(num))) + 1;
 }
 
 char *intStr(int num){
-    char *str = malloc(intSize(num)+1);
+    size_t size = intSize(num);
+    char *str = malloc(size+1);
     sprintf(str, "%d", num);
     return str;
 }
@@ -79,7 +83,7 @@ bool isTwentiethCentury(unsigned int year){
 
 int randomInt(int start, int end){
     float ratio = rand()/RAND_MAX;
-    return start + (int)((end-start)*ratio);
+    return (int)(start + ((end-start)*ratio));
 }
 
 char *concatStr(const char *first, const char *second){

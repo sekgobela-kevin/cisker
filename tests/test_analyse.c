@@ -74,7 +74,7 @@ START_TEST(testCreateSNumsInfo)
     ck_assert_int_eq(students_info.start_pos, -1);
     ck_assert_int_eq(students_info.end_pos, -1);
     ck_assert_int_eq(students_info.year_capacity, YEAR_CAPACITY);
-    ck_assert_int_eq(students_info.strict, STRICT);
+    ck_assert(students_info.strict==STRICT);
 }
 END_TEST
 
@@ -291,25 +291,26 @@ Suite * create_analyse_suite(void){
     tcase_add_test(test_case, testYearPartSize);
     tcase_add_test(test_case, testCalStartPos);
 
+
     tcase_add_test(test_case, testCreateSNumsInfo);
     tcase_add_test(test_case, testToPos);
     tcase_add_test(test_case, testToYear);
     tcase_add_test(test_case, testToPosPart);
     tcase_add_test(test_case, testToYearPart);
 
-    // tcase_add_test(test_case, testPartValid);
-    // tcase_add_test(test_case, testYearValid);
-    // tcase_add_test(test_case, testPosValid);
-    // tcase_add_test(test_case, testYearPartValid);
-    // tcase_add_test(test_case, testPosPartValid);
+    tcase_add_test(test_case, testPartValid);
+    tcase_add_test(test_case, testYearValid);
+    tcase_add_test(test_case, testPosValid);
+    tcase_add_test(test_case, testYearPartValid);
+    tcase_add_test(test_case, testPosPartValid);
 
-    //tcase_add_test(test_case, testExtractPosPart);
-    //tcase_add_test(test_case, testExtractYearPart);
-    //tcase_add_test(test_case, testExtractPos);
-    //tcase_add_test(test_case, testExtractYear);
+    tcase_add_test(test_case, testExtractPosPart);
+    tcase_add_test(test_case, testExtractYearPart);
+    tcase_add_test(test_case, testExtractPos);
+    tcase_add_test(test_case, testExtractYear);
 
-    // tcase_add_test(test_case, testSplitStudentNumber);
-    // tcase_add_test(test_case, testStudentNumberValid);
+    tcase_add_test(test_case, testSplitStudentNumber);
+    tcase_add_test(test_case, testStudentNumberValid);
     
     suite_add_tcase(test_suite, test_case);
     return test_suite;

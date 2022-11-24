@@ -37,7 +37,7 @@ END_TEST
 START_TEST(testGuessYearPart)
 {
     SNumsInfo students_info = createSNumsInfo();
-    part_t year_part = guessPosPart(students_info);
+    part_t year_part = guessYearPart(students_info);
     pos_t year = toYear(year_part, students_info);
     ck_assert_int_ge(year, students_info.start_year);
     ck_assert_int_le(year, students_info.end_year);
@@ -95,20 +95,20 @@ END_TEST
 
 
 
-Suite * create_utils_suite(void)
+Suite * create_generate_suite(void)
 {
     Suite *test_suite;
     TCase *test_case;
 
-    test_suite = suite_create("utilities");
-    test_case = tcase_create("utilities");
+    test_suite = suite_create("generate");
+    test_case = tcase_create("generate");
 
     tcase_add_test(test_case, testGuessPos);
     tcase_add_test(test_case, testGuessYear);
     tcase_add_test(test_case, testGuessPosPart);
     tcase_add_test(test_case, testGuessYearPart);
-    tcase_add_test(test_case, testGuessStudentNumber);
     tcase_add_test(test_case, testCreateStudentNumber);
+    tcase_add_test(test_case, testGuessStudentNumber);
     tcase_add_test(test_case, testPreviousStudentNumber);
     tcase_add_test(test_case, testNextStudentNumber);
     suite_add_tcase(test_suite, test_case);

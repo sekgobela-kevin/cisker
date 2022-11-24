@@ -51,9 +51,6 @@ pos_t calStartPos(pos_t max_pos, capacity_t year_capacity){
 size_t posPartSize(pos_t min_pos, capacity_t year_capacity){
     // Calculates size(digits) position part of student number.
     pos_t max_pos = calMaxPos(min_pos, year_capacity);
-    if(max_pos==0){
-        return 1;
-    }
     return intSize(max_pos);
 }
 
@@ -84,7 +81,7 @@ year_t toYear(part_t year_part, SNumsInfo students_info){
 
 part_t toPosPart(pos_t pos, SNumsInfo students_info){
     char *pos_str = intStr(pos);
-    int pos_part_size = posPartSize(students_info.min_pos,
+    size_t pos_part_size = posPartSize(students_info.min_pos,
                                     students_info.year_capacity);
     part_t pos_part = fillStr(pos_str, '0', pos_part_size);
     free(pos_str);
@@ -94,7 +91,7 @@ part_t toPosPart(pos_t pos, SNumsInfo students_info){
 part_t toYearPart(year_t year, SNumsInfo students_info){
     part_t year_part;
     char * year_str = intStr(year);
-    size_t year_size = strlen(year_part);
+    size_t year_size = strlen(year_str);
     if(students_info.strict && isTwentiethCentury(year)){
         year_part = sliceStr(year_str, year_size - 2, year_size);
         free(year_str);

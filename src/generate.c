@@ -3,7 +3,7 @@
 #include <generate.h>
 
 pos_t guessPos(SNumsInfo students_info){
-    pos_t start_pos = students_info.start_pos;
+    int start_pos = students_info.start_pos;
     pos_t end_pos = calMaxPos(students_info.min_pos,
                             students_info.year_capacity);
     if(start_pos<0){
@@ -42,7 +42,7 @@ int guessStudentNumber(SNumsInfo students_info){
 }
 
 int previousStudentNumber(int student_number, SNumsInfo students_info){
-    pos_t start_pos = students_info.start_pos;
+    int start_pos = students_info.start_pos;
     if(start_pos<0){
         start_pos = students_info.min_pos;
     }
@@ -51,20 +51,21 @@ int previousStudentNumber(int student_number, SNumsInfo students_info){
     if(pos>start_pos){
         pos -= 1;
     }else{
-        pos = start_pos;
+        pos = calMaxPos(students_info.min_pos,
+                        students_info.year_capacity);
         year -= 1;
     }
     return createStudentNumber(year, pos, students_info);
 }
 
 int nextStudentNumber(int student_number, SNumsInfo students_info){
-    pos_t end_pos = students_info.end_pos;
-    pos_t start_pos = students_info.start_pos;
+    int end_pos = students_info.end_pos;
+    int start_pos = students_info.start_pos;
     if(start_pos<0){
         start_pos = students_info.min_pos;
     }
     if(end_pos<0){
-        pos_t end_pos = calMaxPos(students_info.min_pos,
+        end_pos = calMaxPos(students_info.min_pos,
                                 students_info.year_capacity);
     }
     year_t year = extractYear(student_number, students_info);
