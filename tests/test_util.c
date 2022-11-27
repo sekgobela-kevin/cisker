@@ -127,6 +127,29 @@ START_TEST(test_fill_str)
 }
 END_TEST
 
+START_TEST(test_equal_str)
+{
+    ck_assert(equalStr("name", "name"));
+    ck_assert(!equalStr("name", "aaaa"));
+}
+END_TEST
+
+START_TEST(test_shrink_mem)
+{
+    char *str = malloc(10);
+    strcpy(str, "name");
+    ck_assert_str_eq((char*)shrinkMem(str, strlen(str)+1), "name");
+}
+END_TEST
+
+START_TEST(test_shrink_str)
+{
+    char *str = malloc(10);
+    strcpy(str, "name");
+    ck_assert_str_eq(shrinkStr(str), "name");
+}
+END_TEST
+
 
 Suite * create_utils_suite(void)
 {
@@ -148,6 +171,9 @@ Suite * create_utils_suite(void)
     tcase_add_test(test_case, test_random_int);
     tcase_add_test(test_case, test_concat_str);
     tcase_add_test(test_case, test_fill_str);
+    tcase_add_test(test_case, test_equal_str);
+    tcase_add_test(test_case, test_shrink_mem);
+    tcase_add_test(test_case, test_shrink_str);
     suite_add_tcase(test_suite, test_case);
     return test_suite;
 }
