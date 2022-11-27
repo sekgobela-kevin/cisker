@@ -67,6 +67,23 @@ bool equalIntArrays(const int *arr, int *sarr, size_t size){
     return true;
 }
 
+bool equalStr(const char*first, const char *second){
+    // Getting length of string is bad practice.
+    // strlen() is likely to be have time complexity of linear(O(n)).
+    // Length of string is not stored in any place.
+    size_t first_size = strlen(first);
+    size_t second_size = strlen(second);
+    size_t min_size;
+    if(first_size==second_size){
+        min_size = first_size<second_size? first_size: second_size;
+        // Not need to compare null terminating character.
+        return memcmp(first, second, min_size)==0;
+    }else{
+        return false;
+    }
+    
+}
+
 unsigned int getCentury(unsigned int year){
     int year_size = intSize(year);
     char *centuary_str;
@@ -113,4 +130,16 @@ char *fillStr(const char *str, char fill, size_t size){
     filled_str = concatStr(fill_str, str);
     free(fill_str);
     return filled_str;
+}
+
+void *shrinkMem(void *ptr, size_t size){
+    char *new_mem = realloc(ptr, size);
+    if(new_mem!=NULL){
+        return new_mem;
+    }
+    return ptr;
+}
+
+char *shrinkStr(char *str){
+    return shrinkMem(str, strlen(str)+1);
 }

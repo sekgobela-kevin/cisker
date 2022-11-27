@@ -28,3 +28,8 @@ char *concatStr(const char *first, const char *second);
 
 char *fillStr(const char *str, char fill, size_t size);
 
+bool equalStr(const char*first, const char *second);
+
+void *shrinkMem(void *ptr, size_t size);
+
+char *shrinkStr(char *str);

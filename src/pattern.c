@@ -11,7 +11,8 @@ char *commonLeadingSubString(char *first, char *second){
     size_t second_size = strlen(second);
     size_t min_size = first_size<second_size? first_size:second_size;
     char *common = malloc(sizeof(char)*(min_size+1));
-    for (size_t i = 0; i < first_size; i++)
+    size_t i;
+    for (i=0; i < first_size; i++)
     {
         if(first[i] == second[i]){
             common[i] = first[i];
@@ -19,20 +20,24 @@ char *commonLeadingSubString(char *first, char *second){
             break;
         }
     }
-    common[min_size] = '\0';
-    realloc(common, sizeof(char)*(strlen(common)+1));
-    return common;
+    // Remeber that 'i' is incremented by for loop.
+    // It points to index of null character.
+    common[i] = '\0';
+    char *mm = shrinkMem(common, sizeof(char)*(i+1));
+    return mm;
 }
 
 char *remainingSubString(char *str, char *leading){
     char *first_pointer = strstr(str, leading);
+    size_t str_size = strlen(str);
+    size_t leading_size = strlen(leading);
     int start_index;
     if(first_pointer==str){
-        start_index = 0;
+        start_index = leading_size;
     }else{
-        start_index = strlen(leading);
+        start_index = str_size;
     }
-    return sliceStr(str, start_index, strlen(str));
+    return sliceStr(str, start_index, str_size);
 }
 
 
@@ -43,7 +48,9 @@ char *occurrenceRangePattern(int start, int end, char *dpattern){
     char *end_str = intStr(end);
     pattern[0] = '\0';
     if(start==end){
-        if(start!=0){
+        if(start==1){
+            strcat(pattern, dpattern);
+        }else if(start!=0){
             strcat(pattern, dpattern);
             strcat(pattern, "{");
             strcat(pattern, start_str);
@@ -57,14 +64,13 @@ char *occurrenceRangePattern(int start, int end, char *dpattern){
         strcat(pattern, end_str);
         strcat(pattern, "}");
     }
-    realloc(pattern, sizeof(char)*(strlen(pattern)+1));
     free(start_str);
     free(end_str);
     return pattern;
 }
 
 char *charRangePattern(char first, char second){
-    char *pattern = malloc(sizeof(char)*(5));
+    char *pattern = malloc(sizeof(char)*6);
     char first_str[2] = {first, '\0'};
     char second_str[2] = {second, '\0'};
     pattern[0] = '\0';
@@ -77,7 +83,6 @@ char *charRangePattern(char first, char second){
         strcat(pattern, second_str);
         strcat(pattern, "]");
     }
-    realloc(pattern, sizeof(char)*(strlen(pattern)+1));
     return pattern;
 }
 
@@ -102,34 +107,36 @@ char *intRangePattern(int start, int end, char *dpattern){
         min_remaining_size = start_remaining_size;
         max_remaining_size = end_remaining_size;
     }
+    // This is enough to hold characters for pattern.
+    // dpattern is expected to be used once within pattern.
+    // +10 for other characters that may be used in pattern.
+    size_t pattern_size = max_remaining_size+strlen(dpattern)+10;
     // Common leading part is shared, it can be used as pattern.
-    // Pattern pointer is pointed to leading part string.
-    char *pattern = common_leading;
-    // strlen(end_str)*strlen(dpattern)) is enough to hold pattern.
-    // Some of extra memory may be unused.
-    realloc(pattern, sizeof(char)*(strlen(end_str)*strlen(dpattern)));
+    char *pattern = calloc(sizeof(char), pattern_size);
+    strcpy(pattern, common_leading);
 
     // pattern for remaining part is created here.
-    int total_remaining_digits = max_remaining_size;
     if(start_remaining_size && end_remaining_size){
-        // Range for first digit can created without problems.
-        // This is possible since leading part does not change.
-        char * first_digit_pattern = charRangePattern(
-            start_remaining[0], end_remaining[0]
-        );
-        strcat(pattern, first_digit_pattern);
-        // Minus by one to exclude first digit(avoid duplicate).
-        // first_digit_pattern was just added and should be added again.
-        total_remaining_digits -= 1;
-        free(first_digit_pattern);
+        if(start_remaining_size==end_remaining_size){
+            // Range for first digit can created without problems.
+            // This is possible since leading part does not change.
+            char * first_digit_pattern = charRangePattern(
+                start_remaining[0], end_remaining[0]
+            );
+            strcat(pattern, first_digit_pattern);
+            // Minus by one to exclude first digit(avoid duplicate).
+            // first_digit_pattern was just added and should be added again.
+            min_remaining_size -= 1;
+            max_remaining_size -= 1;
+            free(first_digit_pattern);
+        }
     }
     // Creates pattern for remaining digits.
-    // total_remaining_digits-1 needs to be >= min_remaining_size as
-    // required by occurrenceRangePattern().
-    // First digit pattern may have alsready have been added to pattern.
-    if(max_remaining_size>min_remaining_size){
+    // occurrenceRangePattern() does not require negative numbers.
+    // First digit pattern may have already been added to pattern.
+    if(min_remaining_size>=0){
         char * remaining_digits_patten = occurrenceRangePattern(
-            min_remaining_size, total_remaining_digits, dpattern
+            min_remaining_size, max_remaining_size, dpattern
         );
         strcat(pattern, remaining_digits_patten);
         free(remaining_digits_patten);
@@ -138,6 +145,5 @@ char *intRangePattern(int start, int end, char *dpattern){
     free(end_remaining);
     // common_leading shouldnt be freed as pattern points to it.
     // Frees memory not used by pattern string.
-    realloc(pattern, sizeof(char)*(strlen(pattern)+1));
-    return pattern;
+    return shrinkStr(pattern);
 }
