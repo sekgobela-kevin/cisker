@@ -278,6 +278,70 @@ END_TEST
 
 
 
+
+START_TEST(testStudentNumbersMaxSize)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    ck_assert_int_eq(studentNumbersMaxSize(students_info), 9);
+    students_info.start_year = 1982;
+    students_info.end_year = 1990;
+    ck_assert_int_eq(studentNumbersMaxSize(students_info), 7);
+
+    students_info.strict = false;
+    ck_assert_int_eq(studentNumbersMaxSize(students_info), 9);
+    students_info.year_capacity = 90;
+    ck_assert_int_eq(studentNumbersMaxSize(students_info), 6);
+}
+END_TEST
+
+START_TEST(testTotalStudentNumbers)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    students_info.start_year = 2010;
+    students_info.end_year = 2010;
+    ck_assert_int_eq(totalStudentNumbers(students_info), 100000);
+    students_info.end_year = 2011;
+    ck_assert_int_eq(totalStudentNumbers(students_info), 100000*2);
+    students_info.year_capacity = 10;
+    ck_assert_int_eq(totalStudentNumbers(students_info), 10*2);
+
+    students_info.start_pos = 5;
+    ck_assert_int_eq(totalStudentNumbers(students_info), 10);
+    students_info.end_pos = 14;
+    ck_assert_int_eq(totalStudentNumbers(students_info), 10*2);
+}
+END_TEST
+
+START_TEST(testStartDistance)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    students_info.start_year = 2010;
+    students_info.end_year = 2010;
+    ck_assert_int_eq(startDistance(201099999, students_info), 100000-1);
+    students_info.end_year = 2011;
+    ck_assert_int_eq(startDistance(201199999, students_info), (100000*2)-1);
+    students_info.year_capacity = 10;
+    ck_assert_int_eq(startDistance(20109, students_info), 10-1);
+    ck_assert_int_eq(startDistance(20119, students_info), (10*2)-1);
+}
+END_TEST
+
+START_TEST(testEndDistance)
+{
+    SNumsInfo students_info = createSNumsInfo();
+    students_info.start_year = 2010;
+    students_info.end_year = 2010;
+    ck_assert_int_eq(endDistance(201000000, students_info), 100000-1);
+    students_info.end_year = 2011;
+    ck_assert_int_eq(endDistance(201000000, students_info), (100000*2)-1);
+    students_info.year_capacity = 10;
+    ck_assert_int_eq(endDistance(20100, students_info), (10*2)-1);
+    ck_assert_int_eq(endDistance(20110, students_info), 10-1);
+}
+END_TEST
+
+
+
 Suite * create_analyse_suite(void){
     Suite *test_suite;
     TCase *test_case;
@@ -311,6 +375,11 @@ Suite * create_analyse_suite(void){
 
     tcase_add_test(test_case, testSplitStudentNumber);
     tcase_add_test(test_case, testStudentNumberValid);
+
+    tcase_add_test(test_case, testStudentNumbersMaxSize);
+    tcase_add_test(test_case, testTotalStudentNumbers);
+    tcase_add_test(test_case, testStartDistance);
+    tcase_add_test(test_case, testEndDistance);
     
     suite_add_tcase(test_suite, test_case);
     return test_suite;

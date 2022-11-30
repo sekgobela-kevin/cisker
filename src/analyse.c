@@ -63,6 +63,40 @@ size_t yearPartSize(year_t year, unsigned int strict){
     }
 }
 
+size_t studentNumbersMaxSize(SNumsInfo students_info){
+    bool strict = students_info.strict;
+    size_t start_year_size = yearPartSize(students_info.start_year,
+                                          strict);
+    size_t end_year_size = yearPartSize(students_info.end_year, strict);
+    size_t pos_size = posPartSize(students_info.min_pos,
+                                students_info.year_capacity);
+    size_t year_size;
+    if(end_year_size>start_year_size){
+        year_size = end_year_size;
+    }else{
+        year_size = start_year_size;
+    }
+    return year_size + pos_size;
+}
+
+size_t totalStudentNumbers(SNumsInfo students_info){
+    size_t total_years = students_info.end_year - students_info.start_year;
+    pos_t start_pos, end_pos;
+    if(students_info.start_pos<0){
+        start_pos = students_info.min_pos;
+    }else{
+        start_pos = students_info.start_pos;
+    }
+    if(students_info.end_pos<0){
+        end_pos = calMaxPos(students_info.min_pos,
+                            students_info.year_capacity);
+    }else{
+        end_pos = students_info.end_pos;
+    }
+    capacity_t year_capacity = calYearCapacity(start_pos, end_pos);
+    // both start and end year are included(+1)
+    return (total_years+1) * year_capacity;
+}
 
 pos_t toPos(part_t pos_part, SNumsInfo students_info){
     return strInt(pos_part);
@@ -231,4 +265,31 @@ bool studentNumberValid(snum_t student_number, SNumsInfo students_info){
     free(year_part);
     free(pos_part);
     return is_valid;
+}
+
+
+dist_t startDistance(snum_t student_number, SNumsInfo students_info){
+    int year = extractYear(student_number, students_info);
+    int pos = extractPos(student_number, students_info);
+    SNumsInfo info_copy = students_info;
+    info_copy.end_year = year;
+    SNumsInfo info_copy2 = students_info;
+    info_copy2.start_year = students_info.start_year;
+    info_copy2.end_year = students_info.start_year;
+    info_copy2.start_pos = pos;
+    int year_end_distance = totalStudentNumbers(info_copy2);
+    return (totalStudentNumbers(info_copy) - year_end_distance) - 1;
+}
+
+dist_t endDistance(snum_t student_number, SNumsInfo students_info){
+    int year = extractYear(student_number, students_info);
+    int pos = extractPos(student_number, students_info);
+    SNumsInfo info_copy = students_info;
+    info_copy.start_year = year;
+    SNumsInfo info_copy2 = students_info;
+    info_copy2.start_year = students_info.start_year;
+    info_copy2.end_year = students_info.start_year;
+    info_copy2.end_pos = pos;
+    int year_start_distance = totalStudentNumbers(info_copy2);
+    return (totalStudentNumbers(info_copy) - year_start_distance) - 1;
 }

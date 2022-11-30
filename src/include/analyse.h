@@ -36,6 +36,7 @@ typedef unsigned int capacity_t;
 typedef unsigned int size_t;
 typedef char* part_t;
 typedef unsigned int snum_t;
+typedef unsigned int dist_t;
 
 struct StudentNumsInfo{
     year_t start_year;
@@ -103,3 +104,13 @@ pos_t extractPos(snum_t student_number, SNumsInfo students_info);
 SNum splitStudentNumber(snum_t student_number, SNumsInfo students_info);
 
 bool studentNumberValid(snum_t studnet_number, SNumsInfo students_info);
+
+
+
+size_t studentNumbersMaxSize(SNumsInfo students_info);
+
+size_t totalStudentNumbers(SNumsInfo students_info);
+
+dist_t endDistance(snum_t student_number, SNumsInfo students_info);
+
+dist_t startDistance(snum_t student_number, SNumsInfo students_info);
