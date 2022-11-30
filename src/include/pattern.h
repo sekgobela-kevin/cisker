@@ -13,6 +13,6 @@ char *intRangePattern(int start, int end, char *dpattern);
 
 char *yearPartPattern(SNumsInfo students_info);
 
-char *yearPartPattern(SNumsInfo students_info);
+char *posPartPattern(SNumsInfo students_info);
 
 char *studentNumbersPattern(SNumsInfo students_info);

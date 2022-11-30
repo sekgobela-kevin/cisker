@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
 
@@ -86,14 +87,12 @@ char *charRangePattern(char first, char second){
     return pattern;
 }
 
-char *intRangePattern(int start, int end, char *dpattern){
-    char *start_str = intStr(start);
-    char *end_str = intStr(end);
+char *strIntRangePattern(char* start, char *end, char *dpattern){
     // Pattern for leading and remaining part need to be created.
     // That would require leading and remaining sub-strings.
-    char *common_leading = commonLeadingSubString(start_str, end_str);
-    char *start_remaining = remainingSubString(start_str, common_leading);
-    char *end_remaining = remainingSubString(end_str, common_leading);
+    char *common_leading = commonLeadingSubString(start, end);
+    char *start_remaining = remainingSubString(start, common_leading);
+    char *end_remaining = remainingSubString(end, common_leading);
     // size for remaining parts is required to create pattern.
     size_t start_remaining_size = strlen(start_remaining);
     size_t end_remaining_size = strlen(end_remaining);
@@ -143,7 +142,96 @@ char *intRangePattern(int start, int end, char *dpattern){
     }
     free(start_remaining);
     free(end_remaining);
-    // common_leading shouldnt be freed as pattern points to it.
+    free(common_leading);
     // Frees memory not used by pattern string.
     return shrinkStr(pattern);
+}
+
+char *intRangePattern(int start, int end, char *dpattern){
+    char *start_str = intStr(start);
+    char *end_str = intStr(end);
+    char *pattern = strIntRangePattern(start_str, end_str, dpattern);
+    free(start_str);
+    free(end_str);
+    return pattern;
+}
+
+char *yearPartPattern(SNumsInfo students_info){
+    year_t start_year = students_info.start_year;
+    year_t end_year = students_info.end_year;
+    if(students_info.strict){
+        part_t start_year_part = toYearPart(start_year, students_info);
+        part_t end_year_part = toYearPart(end_year, students_info);
+        int start_year_part_int = strInt(start_year_part);
+        int end_year_part_int = strInt(end_year_part);
+        size_t start_year_part_size = strlen(start_year_part);
+        size_t end_year_part_size = strlen(end_year_part);
+        char *start_year_pattern = NULL;
+        char *end_year_pattern = NULL;
+        char *pattern = NULL;
+        if(start_year_part_size==2 && end_year_part_size!=2){
+            // 99 -> year 1999 & 2000 -> year 2000
+            start_year_pattern = strIntRangePattern(
+                start_year_part, "99", "\\d");
+            end_year_pattern = intRangePattern(
+                2000, end_year_part_int, "\\d");
+        }else if(start_year_part_size!=2 && end_year_part_size==2){
+            // 1899 -> year 1899 & 00 -> year 1900
+            start_year_pattern = intRangePattern(
+                start_year_part_int, 1899, "\\d");
+            end_year_pattern = strIntRangePattern(
+                "00", end_year_part, "\\d");
+        }else{
+            pattern = intRangePattern(start_year_part_int,
+                                      end_year_part_int, "\\d");
+        }
+        if(start_year_pattern!=NULL && end_year_pattern!=NULL){
+            pattern = malloc(strlen(start_year_pattern) +
+                             strlen(end_year_pattern) + 5 + 1);
+            sprintf(pattern, "(%s)|(%s)", start_year_pattern,
+                    end_year_pattern);
+            free(start_year_pattern);
+            free(end_year_pattern);
+        }
+        return pattern;
+    }
+    return intRangePattern(start_year, end_year, "\\d");
+}
+
+char *posPartPattern(SNumsInfo students_info){
+    int year_capacity = students_info.year_capacity;
+    int start_pos = students_info.start_pos;
+    int end_pos = students_info.end_pos;
+    if(start_pos<0){
+        start_pos = students_info.min_pos;
+    }
+    if(end_pos<0){
+        end_pos = calMaxPos(students_info.min_pos, year_capacity);
+    }
+    size_t pos_part_size = posPartSize(students_info.min_pos,
+                                       year_capacity);
+    char *start_pos_str = intStr(start_pos);
+    char *end_pos_str = intStr(end_pos);
+    //Start and end pos are zero filled.
+    char *start_pos_str_fill = fillStr(start_pos_str, '0', pos_part_size);
+    char *end_pos_str_fill = fillStr(end_pos_str, '0', pos_part_size);
+    // Pattern is created from those zero filled positions.
+    char *pattern = strIntRangePattern(
+        start_pos_str_fill, end_pos_str_fill, "\\d");
+    free(start_pos_str);
+    free(end_pos_str);
+    free(start_pos_str_fill);
+    free(end_pos_str_fill);
+    return pattern;
+}
+
+char *studentNumbersPattern(SNumsInfo students_info){
+    char *year_part_pattern = yearPartPattern(students_info);
+    char *pos_part_pattern = posPartPattern(students_info);
+    char *pattern = malloc(strlen(year_part_pattern) +
+                        strlen(pos_part_pattern) + 5 + 1);
+    sprintf(pattern, "(%s)(%s)", year_part_pattern, pos_part_pattern);
+    free(year_part_pattern);
+    free(pos_part_pattern);
+    return pattern;
 }
