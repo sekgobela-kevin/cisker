@@ -33,6 +33,7 @@ add_library(testlib
   "${TESTS_FOLDER}/test_util.c"
   "${TESTS_FOLDER}/test_generate.c"
   "${TESTS_FOLDER}/test_pattern.c"
+  "${TESTS_FOLDER}/test_filter.c"
 )
 
 target_include_directories(testlib PUBLIC "${TESTS_FOLDER}/include")

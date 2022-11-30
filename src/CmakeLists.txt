@@ -1,2 +1,8 @@
-add_library(cisker analyse.c util.c generate.c pattern.c)
+add_library(
+    cisker 
+    analyse.c 
+    util.c 
+    generate.c 
+    pattern.c
+    filter.c)
 target_include_directories(cisker PRIVATE include)
