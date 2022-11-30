@@ -99,7 +99,7 @@ bool isTwentiethCentury(unsigned int year){
 }
 
 int randomInt(int start, int end){
-    float ratio = rand()/RAND_MAX;
+    float ratio = (float)rand()/RAND_MAX;
     return (int)(start + ((end-start)*ratio));
 }
 
