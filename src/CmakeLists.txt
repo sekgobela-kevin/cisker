@@ -1,12 +1,21 @@
 add_library(
-    cisker 
+    cisker
     analyse.c 
     util.c 
     generate.c 
     pattern.c
-    filter.c)
+    filter.c
+)
 target_include_directories(cisker PRIVATE include)
 
 # cisker.h will be saved in build directory.
 configure_file(cisker.h.in ../cisker.h)
 target_include_directories(cisker INTERFACE "${PROJECT_BINARY_DIR}")
+
+
+######################################################
+#               INSTALL RULES
+######################################################
+install(TARGETS cisker DESTINATION lib)
+install(DIRECTORY include DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/cisker.h" DESTINATION include)
