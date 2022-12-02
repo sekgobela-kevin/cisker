@@ -24,8 +24,6 @@ add_subdirectory("${SOURCE_FOLDER}")
 add_subdirectory("${TESTS_FOLDER}")
 add_subdirectory("${EXTERN_FOLDER}/check")
 
-target_include_directories(cisker PUBLIC "${INCLUDE_FOLDER}/cisker")
-
 # OLD policy CMP0076 is causing problems.
 # Tests cant be linked if not created here(current file)
 add_library(testlib 
@@ -34,6 +32,7 @@ add_library(testlib
   "${TESTS_FOLDER}/test_generate.c"
   "${TESTS_FOLDER}/test_pattern.c"
   "${TESTS_FOLDER}/test_filter.c"
+  "${TESTS_FOLDER}/test_cisker.c"
 )
 
 target_include_directories(testlib PUBLIC "${TESTS_FOLDER}/include")

@@ -1,0 +1,8 @@
+#include <analyse.h>
+#include <generate.h>
+#include <pattern.h>
+
+#define CISKER_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define CISKER_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define CISKER_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#define CISKER_VERSION @PROJECT_VERSION@
