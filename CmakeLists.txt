@@ -22,7 +22,7 @@ set(EXTERN_FOLDER "${PROJECT_SOURCE_DIR}/extern")
 
 add_subdirectory("${SOURCE_FOLDER}")
 add_subdirectory("${TESTS_FOLDER}")
-add_subdirectory("${EXTERN_FOLDER}/check")
+add_subdirectory("${EXTERN_FOLDER}/check" EXCLUDE_FROM_ALL true)
 
 # OLD policy CMP0076 is causing problems.
 # Tests cant be linked if not created here(current file)
